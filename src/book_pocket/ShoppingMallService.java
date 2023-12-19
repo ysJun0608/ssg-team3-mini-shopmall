@@ -3,15 +3,18 @@ package book_pocket;
 import java.util.Scanner;
 
 public class ShoppingMallService {
-    String[] menus = {"고객 정보 확인하기", "장바구니 상품 목록 보기", "장바구니 비우기", "바구니에 항목 추가하기", "장바구니의 항목 수량 줄이기", "장바구니의 항목 삭제하기", "영수증 표시하기", "종료"};
+    String[] menus = {"고객 정보 확인하기", "장바구니 상품 목록 보기", "장바구니 비우기", "바구니에 항목 추가하기", "장바구니의 항목 수량 줄이기", "장바구니의 항목 삭제하기", "영수증 표시하기", "종료", "관리자 로그인"};
+    private User userCurrent;
     private UserService userService;
     private OrderService orderService;
 
+    private AdminService adminService;
     private Scanner sc;
 
-    public ShoppingMallService(Scanner sc, String nameUser, String phoneUser) {
+    public ShoppingMallService(Scanner sc, User user) {
         this.sc = sc;
-        this.userService = new UserService(nameUser, phoneUser);
+        this.userCurrent = user;
+        this.userService = new UserService(this.userCurrent);
         this.orderService = new OrderService(sc, userService);
     }
 
@@ -33,7 +36,7 @@ public class ShoppingMallService {
             System.out.println();
         }
         System.out.println("*".repeat(54));
-        int cmd = Integer.parseInt(sc.nextLine());
+        int cmd = Integer.parseInt(sc.next());
         switch (cmd) {
             case 1:
                 userService.displayUser();
@@ -58,7 +61,12 @@ public class ShoppingMallService {
                 break;
             case 8:
                 return false;
+            case 9:
+                this.adminService = new AdminService(sc);
+                adminService.authenticate(userCurrent);
+                break;
             default:
+                System.out.println("1부터 9까지의 숫자를 입력하세요");
         }
         return true;
     }

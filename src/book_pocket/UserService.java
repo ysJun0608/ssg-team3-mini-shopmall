@@ -3,8 +3,8 @@ package book_pocket;
 public class UserService {
     private User user;
 
-    public UserService(String nameUser, String phoneNumber) {
-        this.user = new User(nameUser, phoneNumber);
+    public UserService(User user) {
+        this.user = new User(user.getName(), user.getPhone());
     }
 
     void displayUser() {
