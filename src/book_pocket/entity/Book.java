@@ -1,4 +1,4 @@
-package book_pocket;
+package book_pocket.entity;
 
 public class Book {
     private String isbn;
