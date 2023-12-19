@@ -3,9 +3,11 @@ package book_pocket;
 import java.util.Scanner;
 
 public class ShoppingMallService {
-    String[] menus = {"고객 정보 확인하기", "장바구니 상품 목록 보기", "장바구니 비우기", "바구니에 항목 추가하기", "장바구니의 항목 수량 줄이기", "장바구니의 항목 삭제하기", "영수증 표시하기", "종료"};
+    String[] menus = {"고객 정보 확인하기", "장바구니 상품 목록 보기", "장바구니 비우기", "바구니에 항목 추가하기", "장바구니의 항목 수량 줄이기", "장바구니의 항목 삭제하기", "영수증 표시하기", "종료", "관리자 로그인"};
     private UserService userService;
     private OrderService orderService;
+
+    private AdminService adminService;
 
     private Scanner sc;
 
@@ -13,6 +15,7 @@ public class ShoppingMallService {
         this.sc = sc;
         this.userService = new UserService(nameUser, phoneUser);
         this.orderService = new OrderService(sc, userService);
+        this.adminService = new AdminService(sc, nameUser, phoneUser);
     }
 
     boolean displayMenu() {
@@ -58,6 +61,9 @@ public class ShoppingMallService {
                 break;
             case 8:
                 return false;
+            case 9:
+                adminService.adminLogin();
+                break;
             default:
         }
         return true;
