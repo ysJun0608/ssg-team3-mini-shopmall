@@ -1,103 +1,100 @@
 package book_pocket.service;
 
+import book_pocket.dto.ExistUserDto;
 import book_pocket.entity.Book;
+import book_pocket.entity.User;
 
-import java.util.Scanner;
+import java.util.Map;
+import java.util.Optional;
 
 public class OrderService {
+    private final BookService bookService = new BookService();
+    private UserService userService = UserService.getInstance();
 
-    private Scanner sc;
-    private UserService userService;
-    private BookService bookService = new BookService();
+    public OrderService() {}
 
-    private int[] cartAmount = new int[bookService.getLengthBooks()];
 
-    public OrderService(Scanner sc, UserService us) {
-        this.sc = sc;
-        this.userService = us;
+    // Method ==============================================================
+
+    public void resetCart(ExistUserDto userDto) {
+        User user = userService.findById(userDto);
+        user.resetCart();
+
+//        cartAmount = new int[bookService.BookCount()]; // 책의 갯수가 많으면 그만큼 반복문으로 모든 인덱스 돌며 0의 값을 넣어주게 되므로 새로 초기화 하는것이 좋음.
     }
 
-    public void resetCart() {
-        cartAmount = new int[bookService.getLengthBooks()];
-        System.out.println("장바구니가 초기화되었습니다.");
-    }
+    //    public void addCart(String bookId, String flag) {
+    public void addCart(ExistUserDto userDto, String bookId, String flag) {
 
-    public void addCart(String bookId) {
-        boolean isExist = false;
-        for (int idxCart = 0; idxCart < cartAmount.length; idxCart++) {
-            Book el = bookService.getBookById(idxCart);
-            if (el.getIsbn().equals(bookId)) {
-                cartAmount[idxCart]++;
-                isExist = true;
-                break;
+        if (flag.equals("Y")) {
+            User user = userService.findById(userDto);
+
+            Optional<Book> optionalBook = bookService.findById(bookId);
+            if (optionalBook.isEmpty()) {
+                System.out.println("존재하지 않는 책 번호입니다.");
+//                throw new Exception("존재하지 않는 책 번호입니다.");
             }
+            Book book = optionalBook.get();
+
+            user.addToCart(book);
         }
-        if (isExist) {
-            System.out.printf("%s 도서가 장바구니에 추가되었습니다.", bookId);
-            System.out.println();
+    }
+
+    public void decreaseAmount(ExistUserDto userDto, String bookId) {
+        User user = userService.findById(userDto);
+
+        if (user.getBookCart().isEmpty()) {
+            System.out.println("장바구니가 비어있습니다.");
+//            throw new Exception("장바구니가 비어있습니다.");
         } else {
-            System.out.println("존재하지 않는 도서입니다.");
+            Optional<Book> optionalBook = bookService.findById(bookId);
+            if (optionalBook.isPresent()) {
+                Book book = optionalBook.get();
+
+                int bookCountInCart = user.getBookCart().getOrDefault(book, 0);
+                if (bookCountInCart > 1) {
+                    user.getBookCart().put(book, bookCountInCart - 1);
+                } else if (bookCountInCart == 1) { // 장바구니에서 책을 빼서 0권이 되면 map에서 제거
+                    user.getBookCart().remove(book);
+                } else {
+                    System.out.println("장바구니에 없는 책입니다.");
+//                    throw new Exception("장바구니에 없는 책입니다.");
+                }
+            }
         }
     }
 
-    public void decreaseAmount(String bookId) {
-        int amountRemain = -1;
-        for (int idxCart = 0; idxCart < cartAmount.length; idxCart++) {
-            Book el = bookService.getBookById(idxCart);
-            if (el.getIsbn().equals(bookId)) {
-                cartAmount[idxCart] = cartAmount[idxCart] < 1 ? 0 : cartAmount[idxCart] - 1;
-                amountRemain = cartAmount[idxCart];
-                break;
-            }
+    public void getCartProductList(ExistUserDto userDto) {
+        User user = userService.findById(userDto);
+        Map<Book, Integer> bookCart = user.getBookCart();
+        for (Book book : bookCart.keySet()) {
+            System.out.println(book.toString());
         }
-        if (amountRemain != -1) {
-            System.out.printf("장바구니 내 %s 도서의 현재 수량은 %d 권입니다", bookId, amountRemain);
-            System.out.println();
+    }
+
+    public void showReceipt(ExistUserDto userDto) {
+        User user = userService.findById(userDto);
+
+        Map<Book, Integer> bookCart = user.getBookCart();
+
+        if (!bookCart.isEmpty()) {
+            for (Book book : bookCart.keySet()) {
+                System.out.println("| " + book + " " + bookCart.get(book) + "권 |");
+            }
         } else {
-            System.out.println("해당 도서는 장바구니에 존재하지 않습니다.");
+            System.out.println("장바구니가 비어있습니다.");
+//            throw new Exception("장바구니가 비어있습니다.");
         }
     }
 
-    public void deleteCartProduct(String bookId) {
-        boolean isExist = false;
-        for (int idxCart = 0; idxCart < cartAmount.length; idxCart++) {
-            Book el = bookService.getBookById(idxCart);
-            if (el.getIsbn().equals(bookId)) {
-                isExist = true;
-                cartAmount[idxCart] = 0;
-            }
-        }
-        if (isExist) {
-            System.out.printf("장바구니 내 %s 도서의 수량이 초기화되었습니다.", bookId);
-            System.out.println();
+    public void resetSpecificBookQuantity(ExistUserDto userDto, String bookId) {
+        User user = userService.findById(userDto);
+        Optional<Book> book = bookService.findById(bookId);
+        if (book.isPresent()) {
+            user.getBookCart().remove(book);
         } else {
-            System.out.println("해당 도서는 장바구니에 존재하지 않습니다.");
-        }
-    }
-
-    public void getCartProductList() {
-        boolean isEmpty = true;
-        int lenCartAmount = cartAmount.length;
-        for (int idxCart = 0; idxCart < lenCartAmount; idxCart++) {
-            Book el = bookService.getBookById(idxCart);
-            if (cartAmount[idxCart] > 0) {
-                isEmpty = false;
-                System.out.printf("장바구니에 담긴 %s 도서의 총 수량은 %d입니다.", el.getIsbn(), cartAmount[idxCart]);
-                System.out.println();
-            }
-        }
-        if (isEmpty) {
-            System.out.println("장바구니가 비어 있습니다.");
-        }
-    }
-
-    public void showReceipt() {
-        int lenCartAmount = cartAmount.length;
-        for (int idxCart = 0; idxCart < lenCartAmount; idxCart++) {
-            if (cartAmount[idxCart] > 0) {
-                Book el = bookService.getBookById(idxCart);
-                System.out.println(el + " " + cartAmount[idxCart] + "권 |");
-            }
+            System.out.println("장바구니에 없는 책입니다.");
+//            throw new Exception("장바구니에 없는 책입니다.");
         }
     }
 }

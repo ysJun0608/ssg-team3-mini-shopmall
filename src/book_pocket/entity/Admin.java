@@ -1,32 +1,20 @@
 package book_pocket.entity;
 
+import static book_pocket.entity.Authority.ADMIN;
+
 public class Admin extends Person {
-    private final String ID_ADMIN = "admin";
-    private final String PASSWORD_ADMIN = "admin1234";
+    private static Admin admin;
 
-    private static Admin instanceSingleton = null;
+    private final String position = "관리자";
+    private String name;
 
-    private Admin(String name, String phone) {
-        super(name, phone);
-    }
-
-    public static Admin getInstance(String name, String phone) {
-        if(instanceSingleton == null) {
-            instanceSingleton = new Admin(name, phone);
+    public static Admin getInstance() {
+        if (admin == null) {
+            admin = new Admin("Admin_abc", "Admin_1234", "01012345678");
         }
-        return instanceSingleton;
+        return admin;
     }
-
-    public String getId() {
-        return ID_ADMIN;
-    }
-
-    public String getPassword() {
-        return PASSWORD_ADMIN;
-    }
-
-    @Override
-    public String toString() {
-        return "이름 " + getName() + "\t연락처" + getPhone() + "\n" + "아이디 "+ getId() + "\t비밀번호 "+ getPassword();
+    public Admin(String id, String password, String phone) {
+        super("Admin_abc", "Admin_1234", "01012345678", ADMIN);
     }
 }
