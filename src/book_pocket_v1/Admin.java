@@ -1,4 +1,4 @@
-package book_pocket;
+package book_pocket_v1;
 
 public class Admin extends Person{
     private String id = "Admin";

@@ -1,4 +1,4 @@
-package book_pocket;
+package book_pocket_v1;
 
 public class UserService {
     private User user;

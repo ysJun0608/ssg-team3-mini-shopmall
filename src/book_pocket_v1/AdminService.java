@@ -1,4 +1,4 @@
-package book_pocket;
+package book_pocket_v1;
 
 import java.util.Scanner;
 
