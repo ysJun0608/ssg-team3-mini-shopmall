@@ -2,6 +2,9 @@ package book_pocket.service;
 
 import book_pocket.entity.Book;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public class BookService {
 
     private Book[] books = addBookData();
@@ -21,5 +24,11 @@ public class BookService {
 
     public Book getBooks(int idx) {
         return books[idx];
+    }
+
+    public Optional<Book> findById(String bookId) {
+        return Arrays.stream(books)
+                .filter(book -> book.getIsbn().equals(bookId))
+                .findFirst();
     }
 }

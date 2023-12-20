@@ -4,6 +4,7 @@ public class Person {
     private String id;
     private String password;
     private String phone;
+    private Authority authority;
 
     public String getId() {
         return id;
@@ -13,15 +14,18 @@ public class Person {
         return password;
     }
 
+    public Person() {}
+
     public Person(String id, String password) {
         this.id = id;
         this.password = password;
     }
 
-    public Person(String id, String password, String phone) {
+    public Person(String id, String password, String phone, Authority authority) {
         this.id = id;
         this.password = password;
         this.phone = phone;
+        this.authority = authority;
     }
 
     protected String printInfo() {

@@ -1,5 +1,7 @@
 package book_pocket.entity;
 
+import static book_pocket.entity.Authority.ADMIN;
+
 public class Admin extends Person {
     private static Admin admin;
 
@@ -13,6 +15,6 @@ public class Admin extends Person {
         return admin;
     }
     public Admin(String id, String password, String phone) {
-        super("Admin_abc", "Admin_1234", "01012345678");
+        super("Admin_abc", "Admin_1234", "01012345678", ADMIN);
     }
 }

@@ -1,13 +1,27 @@
 package book_pocket.entity;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static book_pocket.entity.Authority.CUSTOMER;
+
 public class User extends Person {
     private String name;
-    private BookCart bookCart;
+    private Map<Book, Integer> bookCart;
 
-    public User(String id, String password, String phone, String name, BookCart bookCart) {
-        super(id, password, phone);
+
+    public User() {
+        super();
+    }
+
+    public User(String id, String password, String phone, String name) {
+        super(id, password, phone, CUSTOMER);
         this.name = name;
-        this.bookCart = bookCart;
+        this.bookCart = new HashMap<>();
+    }
+
+    public Map<Book, Integer> getBookCart() {
+        return bookCart;
     }
 
     @Override
@@ -15,11 +29,21 @@ public class User extends Person {
         return "이름 : " + name + "\n" + super.printInfo();
     }
 
+    public void resetCart() {
+        this.bookCart = new HashMap<>();
+    }
+
+    public void addToCart(Book book) {
+        this.getBookCart().put(book, this.getBookCart().getOrDefault(book, 0) + 1);
+
+        System.out.printf("%s 도서가 장바구니에 추가되었습니다.\n", book.getIsbn());
+    }
+
     // Builder Pattern
     private User(Builder builder) {
-        super(builder.id, builder.password, builder.phone);
+        super(builder.id, builder.password, builder.phone, CUSTOMER);
         this.name = builder.name;
-        this.bookCart = builder.bookCart;
+        this.bookCart = new HashMap<>();
     }
 
     public static class Builder {
@@ -27,7 +51,8 @@ public class User extends Person {
         private String password;
         private String phone;
         private String name;
-        private BookCart bookCart;
+        private Map<String, Integer> bookCart = new HashMap<>();
+        private Authority authority;
 
         public Builder id(String id) {
             this.id = id;
@@ -49,8 +74,13 @@ public class User extends Person {
             return this;
         }
 
-        public Builder bookCart(BookCart bookCart) {
+        public Builder bookCart(Map<String, Integer> bookCart) {
             this.bookCart = bookCart;
+            return this;
+        }
+
+        public Builder authority(Authority authority) {
+            this.authority = authority;
             return this;
         }
 
