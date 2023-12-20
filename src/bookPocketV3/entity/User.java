@@ -1,12 +1,15 @@
 package bookPocketV3.entity;
 
+import bookPocketV3.Role;
+
+import static bookPocketV3.Role.ROLE_USER;
 public class User extends Person {
     public User(String name, String userMobile) {
-        super(name, userMobile);
+        super(name, userMobile, ROLE_USER);
     }
 
     public User(String name, String userMobile, String address) {
-        super(name, userMobile, address);
+        super(name, userMobile, address, ROLE_USER);
     }
 
     @Override

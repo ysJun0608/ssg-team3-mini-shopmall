@@ -1,4 +1,6 @@
 package bookPocketV3.entity;
+import bookPocketV3.Role;
+
 import static bookPocketV3.Role.ROLE_ADMIN;
 
 //싱글톤 객체 사용
@@ -11,7 +13,7 @@ public class Admin extends Person {
     //Admin 클래스의 생성자는 pirvate으로 선언되어 외부에서 new를 통해 직접 생성할 수 없다.
     private Admin(String name, String phone) {
         //부모 클래스(Person)의 생성자를 호출하여 입력받은 이름과 값으로 초기화한다.
-        super(name, phone);
+        super(name, phone, ROLE_ADMIN);
     }
 
     //정적인 getInstance를 통해 유일한 인스턴스를 얻는다.

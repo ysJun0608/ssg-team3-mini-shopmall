@@ -11,15 +11,20 @@ public class Person {
     //추가
     private Role role;
 
-    public Person(String name, String userMobile) {
+    //admin
+    public Person(String name, String userMobile, Role role) {
         this.name = name;
         this.userMobile = userMobile;
+        this.role = role;
     }
 
+
+    //user
     public Person(String name, String userMobile, String address, Role role) {
         this.name = name;
         this.userMobile = userMobile;
         this.address = address;
+        this.role = role;
     }
 
     public String getName() {
