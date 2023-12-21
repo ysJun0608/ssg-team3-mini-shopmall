@@ -79,6 +79,9 @@ public class ShoppingMallServiceRunner {
                 initLoop = false;
                 System.out.println("프로그램을 종료합니다.");
 
+                ImageDisplay imageDisplay = new ImageDisplay();
+                imageDisplay.printImage();
+
             } else if (initChoice.equals("4")) { // 아이디가 관리자 아이디일 경우
                 SignInDto dto = getSignInDto("관리자");
 
