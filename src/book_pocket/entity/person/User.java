@@ -1,9 +1,11 @@
-package book_pocket.entity;
+package book_pocket.entity.person;
+
+import book_pocket.entity.Book;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static book_pocket.entity.Authority.CUSTOMER;
+import static book_pocket.entity.person.Authority.CUSTOMER;
 
 public class User extends Person {
     private String name;
@@ -11,13 +13,17 @@ public class User extends Person {
 
 
     public User() {
-        super();
+        super(CUSTOMER);
     }
 
     public User(String id, String password, String phone, String name) {
         super(id, password, phone, CUSTOMER);
         this.name = name;
         this.bookCart = new HashMap<>();
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Map<Book, Integer> getBookCart() {
@@ -28,6 +34,7 @@ public class User extends Person {
     public String toString() {
         return "이름 : " + name + "\n" + super.printInfo();
     }
+
 
     public void resetCart() {
         this.bookCart = new HashMap<>();

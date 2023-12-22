@@ -1,10 +1,11 @@
 package book_pocket;
 
+import book_pocket.dto.AdminSignInDto;
 import book_pocket.dto.ExistUserDto;
 import book_pocket.dto.SignInDto;
 import book_pocket.dto.SignUpDto;
-import book_pocket.entity.Admin;
-import book_pocket.entity.User;
+import book_pocket.entity.person.Admin;
+import book_pocket.entity.person.User;
 import book_pocket.service.AdminService;
 import book_pocket.service.ShoppingMallService;
 import book_pocket.service.UserService;
@@ -15,13 +16,13 @@ import java.util.Scanner;
 public class ShoppingMallServiceRunner {
     static Scanner sc = new Scanner(System.in);
     static ShoppingMallService shoppingMallService = new ShoppingMallService(sc);
-    static AdminService adminService = new AdminService();
+    static AdminService adminService = AdminService.getInstance();
     static UserService userService = UserService.getInstance();
 
     public static void main(String[] args) throws Exception {
         boolean initLoop = true;
         while (initLoop) {
-            System.out.println("1. 회원가입 | 2. 로그인 | 3. 종료");
+            System.out.println("1. 회원가입 | 2. 로그인 | 3. 종료"); // 관리자 로그인 접근법은 Hidden으로 하는게 좋을거 같아서 출력안함
             String initChoice = sc.nextLine();
 
             if (initChoice.equals("1")) { // 고객 회원가입
@@ -36,7 +37,6 @@ public class ShoppingMallServiceRunner {
                     duplicateName = userService.existById(dto); // 아이디가 중복되지 않으면 false 반환
                     if (duplicateName) {
                         System.out.println("이미 존재하는 아이디 입니다.");
-//                        throw new Exception("이미 존재하는 아이디입니다.");
                     }
                 }
 
@@ -60,7 +60,6 @@ public class ShoppingMallServiceRunner {
                 Optional<User> optionalUser = userService.findByIdAndPassword(dto);
                 if (optionalUser.isEmpty()) {
                     System.out.println("잘못된 계정입니다.");
-//                        throw new Exception("잘못된 계정입니다.");
                 }
                 User user = optionalUser.get();
 
@@ -83,11 +82,12 @@ public class ShoppingMallServiceRunner {
                 imageDisplay.printImage();
 
             } else if (initChoice.equals("4")) { // 아이디가 관리자 아이디일 경우
-                SignInDto dto = getSignInDto("관리자");
+                AdminSignInDto dto = getAdminSignInDto();
 
                 if (dto.getId().length() > 6 && dto.getId().substring(0, 6).equals("Admin_")) {
                     Optional<Admin> optionalAdmin = adminService.signIn(dto);
                     if (optionalAdmin.isPresent()) {
+                        optionalAdmin.get().setName(dto.getName());
                         boolean adminLoop = true;
                         while (adminLoop) { // 관리자 메뉴 실행
                             adminLoop = shoppingMallService.adminMenu();
@@ -98,9 +98,8 @@ public class ShoppingMallServiceRunner {
                 }
             } else { // 잘못된 값을 입력된 경우
                 System.out.println("회원가입, 로그인, 종료 중에서 골라주세요.");
-//                throw new Exception("회원가입, 로그인, 종료 외의 값이 입력되었습니다.");
 
-                Thread.sleep(1000);
+                Thread.sleep(800);
             }
         }
         sc.close();
@@ -118,6 +117,14 @@ public class ShoppingMallServiceRunner {
         String password = sc.nextLine();
 
         return new SignInDto(id, password);
+    }
+    private static AdminSignInDto getAdminSignInDto() {
+        SignInDto dto = getSignInDto("관리자 ");
+
+        System.out.print("관리자 이름을 입력해주세요. : ");
+        String name = sc.nextLine();
+
+        return new AdminSignInDto(dto.getId(), dto.getPassword(), name);
     }
 
     private static void welComeToShoppingMall() {

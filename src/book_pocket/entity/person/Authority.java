@@ -1,4 +1,4 @@
-package book_pocket.entity;
+package book_pocket.entity.person;
 
 public enum Authority {
     ADMIN("관리자"), CUSTOMER("고객");

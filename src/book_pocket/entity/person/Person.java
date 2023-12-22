@@ -1,10 +1,27 @@
-package book_pocket.entity;
+package book_pocket.entity.person;
 
 public class Person {
     private String id;
     private String password;
     private String phone;
     private Authority authority;
+
+    public Person(Authority authority) {
+        this.authority = authority;
+    }
+
+    public Person(String id, String password, Authority authority) {
+        this.id = id;
+        this.password = password;
+        this.authority = authority;
+    }
+
+    public Person(String id, String password, String phone, Authority authority) {
+        this.id = id;
+        this.password = password;
+        this.phone = phone;
+        this.authority = authority;
+    }
 
     public String getId() {
         return id;
@@ -14,18 +31,8 @@ public class Person {
         return password;
     }
 
-    public Person() {}
-
-    public Person(String id, String password) {
-        this.id = id;
-        this.password = password;
-    }
-
-    public Person(String id, String password, String phone, Authority authority) {
-        this.id = id;
-        this.password = password;
-        this.phone = phone;
-        this.authority = authority;
+    public String getPhone() {
+        return phone;
     }
 
     protected String printInfo() {

@@ -1,5 +1,8 @@
 package book_pocket.dto;
 
+/**
+ * 엔티티 의존성을 낮추기 위해서 만든 로그인 정보를 받는 Dto
+ */
 public class SignInDto {
 
     private String id;

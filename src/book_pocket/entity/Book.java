@@ -23,6 +23,11 @@ public class Book {
         return isbn;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    // TODO: 필드 변수를 직접적으로 불러와 사용하지 말고, Getter를 사용해서 리턴하기
     @Override
     public String toString() {
         return isbn + " | " + name + " | " + price + " | " + author + " | " + desc + " | " + category + " | " + datePublish + " |";
